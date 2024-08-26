@@ -27,19 +27,13 @@ def processar_requisicoes():
             pass
         else:
             cliente, conn, addr = requisicoes_em_espera.get()
-            try:
-                carro = carros_disponiveis.get_nowait()
-                print(f"{carro} atribuído para {cliente}")
+            # try:
+            carro = carros_disponiveis.get_nowait()
+            print(f"{carro} atribuído para {cliente}")
 
-                # Enviar confirmação para o produtor
-                conn.sendall(f"{carro} atribuído com sucesso".encode('utf-8'))
-                conn.close()
-
-            except queue.Empty:
-                # Se não houver carros disponíveis, recoloca a requisição na fila de espera
-                requisicoes_em_espera.put((cliente, conn, addr))
-            finally:
-                requisicoes_em_espera.task_done()
+            # Enviar confirmação para o produtor
+            conn.sendall(f"{carro} atribuído com sucesso".encode('utf-8'))
+            conn.close()
 
 def handle_requisicao(conn, addr):
     # with conn:
